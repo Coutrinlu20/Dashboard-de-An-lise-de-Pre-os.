@@ -17,6 +17,7 @@ state_options = [{'label': x, 'value': x} for x in  df ['source'].unique()]
 
 #layout
 app.layout = dbc.Container([
+    #row1
    dbc.Row([
        dbc.Col([
            ThemeSwitchAIO(aio_id='theme', themes=[url_theme1, url_theme2]),
@@ -30,12 +31,18 @@ app.layout = dbc.Container([
            dcc.Graph(id='line_graph')
        ])
    ]),
-   dbc.Row([
-       dbc.Col([
-           
-       ])
-   ])
+   #row2
 ])
+#collabacks==================
+@app.callback(
+   Output('line_graph', 'figure'),
+    Input('source', 'value')
+)
+def line(source):
+    print(source)
+    df_data = df.copy(deep=True)
+    mask = df_data['source'].isin(source)
+    return {}
 # Rodar o servidor
 if __name__ == '__main__':
     app.run_server(debug=True, port='8080')
