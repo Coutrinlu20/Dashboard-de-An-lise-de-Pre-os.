@@ -83,8 +83,9 @@ def line(type, toggle):
 def indicatord (type1,type2, toggle ):
     template = template_theme1 if toggle else template_theme2
     df_data = df.copy(deep=True)
-    df_type1 = df_data[df_data]['type'].isin([type1])
-    df_type2=df_data[df_data]['type'].isin([type2])
+    df_type1 =df_data[df_data['type'].isin([type1])]
+    df_type2=df_data[df_data['type'].isin([type2])]
+
     initial_date = str(int(df_data['time'].min()) -1)
     final_date = df_data['time'].max()
 
@@ -94,20 +95,20 @@ def indicatord (type1,type2, toggle ):
     for type , data in iterable:
         fig = go.figure()
         fig.add_trace(go.Indicator(
-            mode= 'number+delta',
-            title={'text': type1},
-            value=data.at[data.index[-1],'time'],
+            mode= 'number',
+            title={'text': f"<span>{type}</span><br><span>{initial_date} -{final_date}</span>"},
+            value=data.at[data.index[-1],'amount'],
             number={'prefix': 'R$', 'valueformat':'.2f'},
-            delta={'relative': True, 'valueformat': '.1fr', 'reference': 100}
+            delta={'relative': True, 'valueformat': '.1%', 'reference':data.at[data.index[0],'amount'] }
         ))
 
         fig.update_layout(template=template)
         indicators.append(fig)
-        return indicators
+    return indicators
 
-# # Run the server
-# if __name__ == '__main__':
-#     app.run_server(debug=True, port=8080)
+# Run the server
+if __name__ == '__main__':
+    app.run_server(debug=True, port=8080)
 
 # from dash import Dash, dcc, html, Input, Output
 # import plotly.express as px
